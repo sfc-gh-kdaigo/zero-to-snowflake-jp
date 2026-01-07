@@ -1,3 +1,34 @@
 # zero-to-snowflake-jp
-## 概要
-このガイドでは、スケーラブルなコンピューティングを実現する仮想ウェアハウス、シームレスなデータリカバリを実現するUNDROP、コスト管理を実現するリソースモニターといった基本機能から、Snowflakeのコア機能を解説します。外部データや半構造化VARIANTデータを取り込み、Dynamic Tablesを用いて宣言的に変換することで、自動化されたデータパイプラインを構築する方法を学習します。クイックスタートでは、Cortex関数によるデータベース内インテリジェンスとCopilotによるSQLアシスタンスを活用したSnowflakeのAIレイヤーを紹介します。ガバナンスは、ロールベースのアクセス制御、列レベルのマスキング、行レベルのポリシーを用いてデータを保護するSnowflake Horizo​​nを通じて確立され、Trust Centerによってセキュリティ監視が可能になります。最後に、Snowflake Marketplaceからデータを取得して分析を充実させ、Streamlitを用いてデータ上で直接インタラクティブなアプリケーションを構築する方法を紹介します。
+# 概要
+> 本レポジトリは [Zero to Snowflake](https://www.snowflake.com/en/resources/summit-essentials/zero-to-snowflake/) を原本とする、日本語化済みサンプルファイルをまとめたものです。
+
+このガイドでは、全5章に分けてSnowflakeのコア機能について触れていきます。
+
+### 1. Getting Started with Snowflake
+まずはスケーラブルな計算のための仮想ウェアハウス、シームレスなデータ復旧のためのUNDROP、コスト制御のためのリソースモニターなどの基本機能を確認します。
+
+### 2. Simple Data Pipeline
+外部データおよび半構造化データを取り込み、Dynamic Tables（動的テーブル）を使用して宣言的に変換することにより、自動化されたデータパイプラインの構築方法を学びます。
+
+### 3. Snowflake Cortex AI
+データベース内インテリジェンスのためのCortex機能と、コード作成支援のためのCopilotを活用したSnowflakeのAIレイヤーを紹介します。
+
+### 4. Governance with Horizon
+ガバナンスは、ロールベースのアクセス制御、列レベルマスキング、行レベルポリシーを使用してデータを保護するSnowflake Horizonを通じて確立され、Trust Centerによりセキュリティ監視が可能になります。
+
+### 5. Apps & Collaboration
+最後に、Snowflake Marketplaceからデータを取得して分析を豊かにし、Streamlitを使用してデータ上に直接インタラクティブアプリケーションを構築する方法に触れることができます。
+
+---
+
+## ステップバイステップ ガイド
+
+前提条件、環境設定、ステップバイステップガイド、および手順については、[クイックスタートガイド](#)をご参照ください。
+
+## 🔗 参考リンク
+
+* [Snowflake Documentation](https://docs.snowflake.com/)
+
+---
+**Last Updated:** Jan 2026
+This repository is for demonstration purposes.
