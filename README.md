@@ -30,5 +30,4 @@
 * [Snowflake Documentation](https://docs.snowflake.com/)
 
 ---
-**Last Updated:** Jan 2026
-This repository is for demonstration purposes.
+**Last Updated:** Jan 2026, This repository is for demonstration purposes.
