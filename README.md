@@ -23,7 +23,7 @@
 
 ## ステップバイステップ ガイド
 
-前提条件、環境設定、ステップバイステップガイド、および手順については、[Snowflake Developer Guides] ([https://www.snowflake.com/en/developers/guides/](url)) をご参照ください。
+前提条件、環境設定、ステップバイステップガイド、および手順については、[Snowflake Developer Guides](https://www.snowflake.com/en/developers/guides/)をご参照ください。
 
 ## 🔗 参考リンク
 
