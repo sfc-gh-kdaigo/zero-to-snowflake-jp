@@ -127,6 +127,12 @@ SELECT * FROM raw_pos.truck_details;
 */
 ALTER WAREHOUSE my_wh SET warehouse_size = 'XLarge';
 
+
+-- テーブルの統計的な情報を見てみましょう　（メタメタデータキャッシュ）
+SELECT COUNT(*) FROM raw_pos.truck_details;
+SELECT MAX(truck_opening_date) AS newest_truck FROM raw_pos.truck_details;
+SELECT MIN(truck_opening_date) AS oldest_truck FROM raw_pos.truck_details;
+
 -- それでは、トラックごとの売上を見てみましょう
 SELECT
     o.truck_brand_name,
@@ -136,6 +142,24 @@ FROM analytics.orders_v o
 GROUP BY o.truck_brand_name
 ORDER BY total_sales DESC;
 
+-- それでは、もう一度トラックごとの売上を見てみましょう　（リザルトキャッシュ）
+SELECT
+    o.truck_brand_name,
+    COUNT(DISTINCT o.order_id) AS order_count,
+    SUM(o.price) AS total_sales
+FROM analytics.orders_v o
+GROUP BY o.truck_brand_name
+ORDER BY total_sales DESC;
+
+-- リザルトキャッシュを回避する条件を追加して、もう一度クエリを実行してみましょう (ウェアハウスキャッシュ)
+SELECT
+    o.truck_brand_name,
+    COUNT(DISTINCT o.order_id) AS order_count,
+    AVG(o.price) AS total_sales
+FROM analytics.orders_v o
+WHERE 1=1  -- リザルトキャッシュを回避する条件
+GROUP BY o.truck_brand_name
+ORDER BY total_sales DESC;
 /*
     結果パネルを開いた状態で、右上のツールバーをすばやく見てみましょう。ここには、検索、列の選択、
     クエリの詳細と期間の統計の表示、列の統計の表示、結果のダウンロードなどのオプションが表示されます。
