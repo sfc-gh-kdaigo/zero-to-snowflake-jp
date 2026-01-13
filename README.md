@@ -1,6 +1,6 @@
 # zero-to-snowflake-jp
 # 概要
-> 本レポジトリは [Zero to Snowflake](https://www.snowflake.com/en/resources/summit-essentials/zero-to-snowflake/) を原本とする、日本語化済みサンプルファイルをまとめたものです。
+> 本レポジトリは [Zero to Snowflake](https://www.snowflake.com/en/developers/guides/zero-to-snowflake/) を原本とする、日本語化済みサンプルファイルをまとめたものです。
 
 このガイドでは、全5章に分けてSnowflakeのコア機能について触れていきます。
 
