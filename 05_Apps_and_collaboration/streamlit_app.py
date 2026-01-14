@@ -13,24 +13,49 @@ session = get_active_session()
 
 # Set the title of the Streamlit application
 st.title("📊 Daily Sales & Weather Analysis")
-st.write("売上データと天気データを同時に可視化します")
+st.write("売上データと天気データを同時に可視化します（アジア太平洋地域 2022-2023）")
 st.write('---')
 
-# Define a function to load data from Snowflake.
+# Define target cities for Asia-Pacific region
+ASIA_CITIES = ['Mumbai', 'Delhi', 'Tokyo', 'Seoul', 'Sydney', 'Melbourne']
+YEARS = [2022, 2023]
+
+# Define a function to load data from Snowflake with filters at SQL level
 @st.cache_data()
 def load_data():
     """
-    Connects to the daily_sales_by_weather_v view and fetches the data.
-    This view combines sales data with weather metrics from Weather Source LLC Frostbyte.
+    Connects to the daily_sales_by_weather_v view and fetches filtered data.
+    - Filters: Asia-Pacific cities only (Mumbai, Delhi, Tokyo, Seoul, Sydney, Melbourne)
+    - Years: 2022 and 2023 only
     Reference: https://app.snowflake.com/marketplace/listing/GZSOZ1LLEL/weather-source-llc-weather-source-llc-frostbyte
     """
-    df = session.table("tb_101.analytics.daily_sales_by_weather_v").to_pandas()
+    # Build SQL query with filters to reduce data volume
+    query = f"""
+        SELECT 
+            DATE,
+            CITY_NAME,
+            COUNTRY_DESC,
+            DAILY_SALES,
+            MENU_ITEM_NAME,
+            AVG_TEMP_FAHRENHEIT,
+            AVG_PRECIPITATION_INCHES,
+            AVG_SNOWDEPTH_INCHES,
+            MAX_WIND_SPEED_MPH
+        FROM tb_101.analytics.daily_sales_by_weather_v
+        WHERE CITY_NAME IN ('Mumbai', 'Delhi', 'Tokyo', 'Seoul', 'Sydney', 'Melbourne')
+          AND YEAR(DATE) IN (2022, 2023)
+          AND DAILY_SALES > 0
+    """
+    df = session.sql(query).to_pandas()
     # Convert DATE column to datetime for proper filtering
     df['DATE'] = pd.to_datetime(df['DATE'])
     return df
 
 # Load the data
-sales_weather_data = load_data()
+with st.spinner('データを読み込んでいます...'):
+    sales_weather_data = load_data()
+
+st.success(f"✅ {len(sales_weather_data):,} 件のデータを読み込みました")
 
 # --- Sidebar Filters ---
 st.sidebar.header("🔍 フィルター設定")
@@ -46,17 +71,27 @@ selected_country = st.sidebar.selectbox(
 # Filter data by selected country
 country_filtered_data = sales_weather_data[sales_weather_data['COUNTRY_DESC'] == selected_country]
 
-# 2. Menu Item Selection (Dropdown)
-menu_items = sorted(country_filtered_data['MENU_ITEM_NAME'].dropna().unique().tolist())
+# 2. City Selection (Dropdown) - filtered by country
+cities = sorted(country_filtered_data['CITY_NAME'].dropna().unique().tolist())
+selected_city = st.sidebar.selectbox(
+    "🏙️ 都市を選択",
+    options=cities
+)
+
+# Filter data by selected city
+city_filtered_data = country_filtered_data[country_filtered_data['CITY_NAME'] == selected_city]
+
+# 3. Menu Item Selection (Dropdown)
+menu_items = sorted(city_filtered_data['MENU_ITEM_NAME'].dropna().unique().tolist())
 selected_menu_item = st.sidebar.selectbox(
     "🍽️ メニューアイテムを選択",
     options=menu_items
 )
 
 # Filter data by selected menu item
-filtered_data = country_filtered_data[country_filtered_data['MENU_ITEM_NAME'] == selected_menu_item]
+filtered_data = city_filtered_data[city_filtered_data['MENU_ITEM_NAME'] == selected_menu_item]
 
-# 3. Date Range Selection (Slider)
+# 4. Date Range Selection (Slider)
 if len(filtered_data) > 0:
     min_date = filtered_data['DATE'].min().date()
     max_date = filtered_data['DATE'].max().date()
@@ -75,7 +110,7 @@ if len(filtered_data) > 0:
         (filtered_data['DATE'].dt.date <= date_range[1])
     ]
 
-# 4. Weather Metric Selection
+# 5. Weather Metric Selection
 weather_metrics = {
     '🌡️ 気温 (°F)': 'AVG_TEMP_FAHRENHEIT',
     '🌧️ 降水量 (inches)': 'AVG_PRECIPITATION_INCHES',
@@ -89,7 +124,7 @@ selected_weather_label = st.sidebar.selectbox(
 selected_weather_metric = weather_metrics[selected_weather_label]
 
 st.sidebar.write('---')
-st.sidebar.info(f"📍 選択中: {selected_country}\n\n🍽️ {selected_menu_item}")
+st.sidebar.info(f"📍 {selected_country} - {selected_city}\n\n🍽️ {selected_menu_item}")
 
 # --- Main Content ---
 
@@ -180,7 +215,7 @@ else:
     ).properties(
         width='container',
         height=450,
-        title=f'{selected_country} - {selected_menu_item}'
+        title=f'{selected_city}, {selected_country} - {selected_menu_item}'
     )
     
     # Display the chart
