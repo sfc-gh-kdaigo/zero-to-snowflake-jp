@@ -1,5 +1,6 @@
--- コンテキスト指定、$の後ろは自ユーザ名に変更
-use database USER$KDAIGO;
+-- コンテキストを指定してデータベースを切り替える
+ SET my_db = 'USER$' || CURRENT_USER();                                                              
+ USE DATABASE IDENTIFIER($my_db);  
 
 -- GitHubリポジトリと連携するためのAPI統合を作成
 CREATE OR REPLACE API INTEGRATION git_api_integration
